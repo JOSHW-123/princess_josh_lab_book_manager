@@ -7,10 +7,10 @@ books_blueprint = Blueprint("books", __name__)
 
 # NEW
 # GET '/books/new'
-@books_blueprint.route("/book/new")
+@books_blueprint.route("/books/new")
 def new_book():
     authors = author_repository.select_all()
-    return render_template("book/new.html", all_authors=authors)
+    return render_template("books/new.html", all_authors=authors)
 
 # CREATE
 # POST '/books'
@@ -21,7 +21,7 @@ def create_book():
     publisher = request.form["publisher"]
     author_id = request.form["author_id"]
     author = author_repository.select(author_id)
-    new_book = Book(book_title, genre, publisher, author)
+    new_book = Book(title, genre, publisher, author)
     book_repository.save(new_book)
     return redirect("/books")
 

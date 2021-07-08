@@ -27,7 +27,7 @@ def select_all():
     return books
 
 def select(id):
-    task = None
+    book = None
     sql = "SELECT * FROM books WHERE id = %s"
     values = [id]
     result = run_sql(sql, values)[0]
@@ -49,7 +49,7 @@ def delete(id):
     run_sql(sql, values)
 
 
-def update(task):
+def update(book):
     sql = "UPDATE books SET (title, genre, publisher, book_id) = (%s, %s, %s, %s) WHERE id = %s"
     values = [book.title, book.genre, book.publisher, book.author, book.book_id]
     run_sql(sql, values)
