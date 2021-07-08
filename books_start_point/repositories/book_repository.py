@@ -1,0 +1,55 @@
+from db.run_sql import run_sql
+
+from models.author import Author
+from models.book import Book
+import repositories.author_repository as author_repository
+
+
+def save(book):
+    sql = "INSERT INTO tasks (title, genre, publisher, author, author_id) VALUES (%s, %s, %s, %s) RETURNING *"
+    values = [book.title, book.genre, book.publisher, book.author, book.author_id]
+    results = run_sql(sql, values)
+    id = results[0]['id']
+    book.id = id
+    return book
+
+
+def select_all():
+    books = []
+
+    sql = "SELECT * FROM books"
+    results = run_sql(sql)
+
+    for row in results:
+        author = author_repository.select(row['author_id'])
+        book = Book(row['title'], row['genre'], row['publisher'], row['author'], row['id'] )
+        book.append(book)
+    return books
+
+def select(id):
+    task = None
+    sql = "SELECT * FROM books WHERE id = %s"
+    values = [id]
+    result = run_sql(sql, values)[0]
+
+    if result is not None:
+        author = author_repository.select(result['author_id'])
+        book = Book(result['title'], result['genre'], result['publisher'], result['author'], result['id'] )
+    return book
+
+
+def delete_all():
+    sql = "DELETE FROM books"
+    run_sql(sql)
+
+
+def delete(id):
+    sql = "DELETE FROM books WHERE id = %s"
+    values = [id]
+    run_sql(sql, values)
+
+
+def update(task):
+    sql = "UPDATE books SET (title, genre, publisher, book_id) = (%s, %s, %s, %s) WHERE id = %s"
+    values = [book.title, book.genre, book.publisher, book.author, book.book_id]
+    run_sql(sql, values)
